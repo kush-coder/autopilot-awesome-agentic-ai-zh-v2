@@ -1,0 +1,527 @@
+/* awesome-agentic-ai-zh — site branding + landing-page styles.
+   Loaded via mkdocs.yml `extra_css`. Material defaults stay intact;
+   this refines brand color, the home hero, grid cards, and tables. */
+
+/* ---- Brand color (indigo) ---- */
+:root {
+  --md-primary-fg-color:        #4f46e5;
+  --md-primary-fg-color--light: #6366f1;
+  --md-primary-fg-color--dark:  #4338ca;
+  --md-accent-fg-color:         #4f46e5;
+}
+body[data-md-color-scheme="slate"] {
+  --md-accent-fg-color: #a5b4fc;
+}
+
+/* ---- Landing hero (index.md) ---- */
+.aaz-hero {
+  text-align: center;
+  padding: 2.5rem 1rem 1.5rem;
+}
+.aaz-hero .aaz-repo {
+  font-family: var(--md-code-font-family);
+  font-size: .72rem;
+  color: var(--md-default-fg-color--light);
+}
+.aaz-hero h1 { font-size: 2.1rem; font-weight: 700; margin: .35rem 0 .25rem; }
+.aaz-hero .aaz-tagline {
+  font-size: 1.05rem;
+  color: var(--md-default-fg-color--light);
+  max-width: 34rem;
+  margin: .4rem auto 1.4rem;
+  line-height: 1.6;
+}
+.aaz-cta {
+  display: inline-flex;
+  gap: .6rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+.aaz-cta .md-button { border-radius: 24px; }
+.aaz-langs { display: flex; gap: .4rem; justify-content: center; flex-wrap: wrap; }
+.aaz-langs a {
+  align-items: center;
+  box-sizing: border-box;
+  display: inline-flex;
+  font-size: .72rem;
+  min-height: 44px;
+  color: var(--md-default-fg-color--light);
+  border: 1px solid var(--md-default-fg-color--lighter);
+  border-radius: 20px;
+  padding: .15rem .7rem;
+  text-decoration: none;
+  transition: color .15s ease, border-color .15s ease, background .15s ease;
+}
+
+/* ---- Teaching diagrams: fast to load, easy to enlarge on a phone ---- */
+.md-typeset .aaz-banner img {
+  display: block;
+  height: auto;
+  margin: 0 auto;
+  width: 100%;
+}
+.aaz-banner__controls {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  font-size: .75rem;
+  gap: .25rem .75rem;
+  justify-content: center;
+  margin-top: .25rem;
+}
+.aaz-banner__controls a,
+.aaz-banner__toggle {
+  align-items: center;
+  box-sizing: border-box;
+  display: inline-flex;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
+  padding: .25rem .5rem;
+}
+.aaz-banner__toggle {
+  background: var(--md-default-bg-color);
+  border: 1px solid currentColor;
+  border-radius: 6px;
+  color: var(--md-default-fg-color);
+  cursor: pointer;
+  font: inherit;
+}
+.aaz-banner__toggle[hidden] { display: none; }
+.aaz-banner__toggle:disabled { cursor: default; }
+.aaz-banner__toggle:focus-visible,
+.aaz-banner__original:focus-visible {
+  outline: 2px solid var(--md-accent-fg-color);
+  outline-offset: 3px;
+}
+.md-typeset .aaz-diagram {
+  margin: 1.5rem auto;
+  text-align: center;
+  width: 100%;
+}
+.md-typeset .aaz-diagram__image-link {
+  border-radius: 10px;
+  display: block;
+}
+.md-typeset .aaz-diagram img {
+  aspect-ratio: 16 / 9;
+  display: block;
+  height: auto;
+  margin: 0 auto;
+  object-fit: contain;
+  width: 100%;
+}
+.md-typeset .aaz-diagram__caption {
+  font-size: .75rem;
+  margin-top: .25rem;
+}
+.md-typeset .aaz-diagram__caption a {
+  align-items: center;
+  display: inline-flex;
+  min-height: 44px;
+  padding: 0 .5rem;
+}
+.md-typeset details > summary {
+  align-items: center;
+  box-sizing: border-box;
+  min-height: 44px;
+}
+.aaz-langs a:hover {
+  color: var(--md-accent-fg-color);
+  border-color: var(--md-accent-fg-color);
+  background: var(--md-default-fg-color--lightest);
+}
+
+/* ---- Mobile reading and touch targets ---- */
+.md-header__button {
+  align-items: center;
+  box-sizing: border-box;
+  display: inline-flex;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
+}
+.md-select__link {
+  align-items: center;
+  box-sizing: border-box;
+  display: flex;
+  min-height: 44px;
+}
+.md-typeset a,
+.md-typeset code {
+  overflow-wrap: anywhere;
+}
+
+.md-typeset .aaz-banner__route-hint {
+  display: none;
+}
+@media (max-width: 47.99rem) {
+  .md-typeset .aaz-banner__route-hint {
+    display: block;
+    margin: .5rem 0;
+    font-size: .8rem;
+    text-align: start;
+  }
+}
+
+/* ---- Stat strip ---- */
+.aaz-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: .75rem;
+  max-width: 40rem;
+  margin: 1.5rem auto;
+}
+.aaz-stat {
+  text-align: center;
+  padding: 1rem .4rem;
+  border-radius: 12px;
+  background: var(--md-default-fg-color--lightest);
+}
+.aaz-stat .aaz-num { font-size: 1.6rem; font-weight: 700; display: block; line-height: 1.2; }
+.aaz-stat .aaz-lbl { font-size: .78rem; color: var(--md-default-fg-color--light); }
+@media (max-width: 30rem) {
+  .aaz-stats { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ---- Grid-card polish (Material `.grid.cards`) ---- */
+.md-typeset .grid.cards > ul > li {
+  border-radius: 12px;
+  transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+}
+.md-typeset .grid.cards > ul > li:hover {
+  border-color: var(--md-accent-fg-color);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, .08);
+  transform: translateY(-2px);
+}
+
+/* ---- Tables: tighter, rounded, hover ---- */
+.md-typeset .resource-table-scroll {
+  max-inline-size: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+}
+.md-typeset .resource-table-scroll:focus-visible {
+  outline: 2px solid var(--md-accent-fg-color);
+  outline-offset: 2px;
+}
+.md-typeset .resource-table-scroll > table.resource-table {
+  inline-size: 100%;
+  min-inline-size: 44rem;
+}
+.md-typeset table {
+  margin-inline: auto;
+}
+.md-typeset table:not([class]) {
+  border-radius: 10px;
+  /* auto, not hidden. Any non-visible overflow value still gives the rounded
+     corners a clipping context, but `hidden` ALSO means a table that does
+     overflow gets silently cropped with no way to reach the rest, which is
+     worse than the sideways drag it was replacing. Today no table overflows at
+     375px (measured across 14 pages), and the README now tells phone readers so
+     — this keeps that claim true by degrading to a scroll rather than to
+     invisible content. */
+  overflow: auto;
+  font-size: .80rem;
+}
+.md-typeset table:not([class]) th {
+  background: var(--md-default-fg-color--lightest);
+  font-weight: 600;
+}
+.md-typeset table:not([class]) tr:hover td {
+  background: var(--md-default-fg-color--lightest);
+}
+
+/* Model references read down two columns, never across a wide catalog. */
+.md-typeset details.model-family table[data-model-family] {
+  table-layout: fixed;
+  width: 100%;
+  min-width: 0;
+}
+.md-typeset details.model-family table[data-model-family] thead th:first-child {
+  width: 25%;
+}
+.md-typeset details.model-family table[data-model-family] th {
+  min-width: 4rem;
+}
+.md-typeset details.model-family table[data-model-family] th,
+.md-typeset details.model-family table[data-model-family] td {
+  overflow-wrap: anywhere;
+}
+.md-typeset details.model-family table[data-model-family] th {
+  overflow-wrap: normal;
+  word-break: normal;
+}
+/* Course choices stay in three columns on desktop and read down on phones. */
+.md-typeset .reader-course-picker .md-typeset__scrollwrap {
+  margin: 0;
+}
+.md-typeset .reader-course-picker .md-typeset__table {
+  display: block;
+  padding: 0;
+}
+.md-typeset .reader-course-picker table:not([class]) {
+  width: 100%;
+  min-width: 0;
+}
+.md-typeset .reader-course-picker th,
+.md-typeset .reader-course-picker td,
+.md-typeset .reader-course-picker a {
+  overflow-wrap: normal;
+  word-break: normal;
+}
+@media (max-width: 600px) {
+  .md-typeset .reader-course-picker table:not([class]),
+  .md-typeset .reader-course-picker tbody,
+  .md-typeset .reader-course-picker tr,
+  .md-typeset .reader-course-picker td {
+    display: block;
+    inline-size: 100%;
+    box-sizing: border-box;
+  }
+  /* Preserve the column headers for assistive technology. */
+  .md-typeset .reader-course-picker thead {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  .md-typeset .reader-course-picker tr + tr {
+    border-block-start: 1px solid var(--md-typeset-table-color);
+  }
+  .md-typeset .reader-course-picker table:not([class]) td {
+    border: 0;
+    padding: .35em .8em;
+  }
+  .md-typeset .reader-course-picker table:not([class]) td:first-child {
+    font-weight: 600;
+    padding-block-start: .8em;
+  }
+  .md-typeset .reader-course-picker table:not([class]) td:nth-child(2) {
+    font-weight: 600;
+  }
+  .md-typeset .reader-course-picker td:nth-child(2) a {
+    align-items: center;
+    display: inline-flex;
+    min-block-size: 44px;
+  }
+  .md-typeset .reader-course-picker table:not([class]) td:last-child {
+    padding-block-end: .8em;
+  }
+}
+/* Resource facts stay visible and read down a page, not across seven columns. */
+.md-typeset .reader-resource-catalog {
+  max-inline-size: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+}
+.md-typeset .reader-resource-catalog:focus-visible {
+  outline: 2px solid var(--md-accent-fg-color);
+  outline-offset: 2px;
+}
+/* Material's automatic table gutter must not create an inner scroll area. */
+.md-typeset .reader-resource-catalog .md-typeset__scrollwrap {
+  margin: 0;
+}
+.md-typeset .reader-resource-catalog .md-typeset__table {
+  display: block;
+  padding: 0;
+}
+.md-typeset .reader-resource-catalog table:not([class]) {
+  table-layout: fixed;
+  width: 100%;
+  min-width: 0;
+}
+.md-typeset .reader-resource-catalog thead th:first-child {
+  width: 10%;
+}
+.md-typeset .reader-resource-catalog thead th:nth-child(2) { width: 20%; }
+.md-typeset .reader-resource-catalog thead th:nth-child(3) { width: 14%; }
+.md-typeset .reader-resource-catalog thead th:nth-child(4),
+.md-typeset .reader-resource-catalog thead th:nth-child(5) { width: 28%; }
+.md-typeset .reader-resource-catalog table:not([class]) th { min-width: 0; padding: .6em .65em; }
+.md-typeset .reader-resource-catalog table:not([class]) td { padding: .6em .65em; }
+.md-typeset .reader-resource-catalog td:nth-of-type(2) {
+  text-align: center; white-space: nowrap;
+}
+.md-typeset .reader-resource-catalog th,
+.md-typeset .reader-resource-catalog td {
+  vertical-align: top;
+  overflow-wrap: break-word;
+  text-align: left;
+}
+.md-typeset .reader-resource-catalog th[scope="rowgroup"] {
+  text-align: center;
+  vertical-align: middle;
+}
+.md-typeset .reader-resource-catalog div[data-field] {
+  margin: .15em 0;
+}
+.md-typeset .reader-resource-catalog div[data-field]:first-child {
+  margin-top: 0;
+}
+.md-typeset .reader-resource-catalog div[data-field]:last-child {
+  margin-bottom: 0;
+}
+.md-typeset .reader-resource-catalog div[data-field="entry"] {
+  font-weight: 600;
+  margin-bottom: .3em;
+}
+@media (max-width: 600px) {
+  .md-typeset details.model-family table[data-model-family] th,
+  .md-typeset details.model-family table[data-model-family] td {
+    padding: .6em .65em;
+  }
+  .md-typeset .reader-resource-catalog th,
+  .md-typeset .reader-resource-catalog td {
+    padding: .6em .65em;
+  }
+}
+/* Phone catalogs: category heading, then full-width resources. */
+@media (max-width: 900px) {
+  .md-typeset .reader-resource-catalog table:not([class]),
+  .md-typeset .reader-resource-catalog tbody,
+  .md-typeset .reader-resource-catalog tr,
+  .md-typeset .reader-resource-catalog th[scope="rowgroup"],
+  .md-typeset .reader-resource-catalog td {
+    display: block;
+    inline-size: 100%;
+    box-sizing: border-box;
+  }
+  /* Keep column labels available to assistive technology, not in a side column. */
+  .md-typeset .reader-resource-catalog thead {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  .md-typeset .reader-resource-catalog th[scope="rowgroup"] {
+    background: var(--md-code-bg-color);
+    text-align: start;
+    font-size: inherit;
+  }
+  .md-typeset .reader-resource-catalog td {
+    border-inline: 0;
+    text-align: left;
+    padding-block: .2em;
+  }
+  .md-typeset .reader-resource-catalog td:first-of-type { padding-top: .7em; }
+  .md-typeset .reader-resource-catalog td:last-of-type { padding-bottom: .7em; }
+  .md-typeset .reader-resource-catalog div[data-field="identity"] {
+    font-size: inherit;
+  }
+}
+
+/* Stage 0: grouped definitions on desktop, full-width short entries on phones. */
+.md-typeset .reader-core-terms table:not([class]) { margin-inline: auto; width: 100%; }
+.md-typeset .reader-core-terms th[scope="rowgroup"] { text-align: center; vertical-align: middle; }
+.md-typeset .reader-core-terms table:not([class]) td { overflow-wrap: break-word; vertical-align: top; }
+@media (max-width: 600px) {
+  .md-typeset .reader-core-terms table:not([class]),
+  .md-typeset .reader-core-terms tbody,
+  .md-typeset .reader-core-terms tr,
+  .md-typeset .reader-core-terms th[scope="rowgroup"],
+  .md-typeset .reader-core-terms table:not([class]) td {
+    box-sizing: border-box; display: block; inline-size: 100%; min-inline-size: 0;
+  }
+  .md-typeset .reader-core-terms thead {
+    position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%);
+  }
+  .md-typeset .reader-core-terms th[scope="rowgroup"] { background: var(--md-code-bg-color); padding: .5em .65em; }
+  .md-typeset .reader-core-terms table:not([class]) td { border: 0; padding: .15em .65em; }
+  .md-typeset .reader-core-terms tr { border-bottom: 1px solid var(--md-typeset-table-color); padding: .35em 0 .45em; }
+}
+
+/* Resource selectors: keep destinations and ratings visible on phones. */
+.md-typeset .reader-table-picker .md-typeset__scrollwrap { margin: 0; }
+.md-typeset .reader-table-picker .md-typeset__table { display: block; padding: 0; }
+.md-typeset .reader-table-picker table:not([class]) { width: 100%; min-width: 0; }
+.md-typeset .reader-table-picker table:not([class]) td,
+.md-typeset .reader-table-picker table:not([class]) a {
+  overflow-wrap: normal; word-break: normal; hyphens: none;
+}
+@media (max-width: 600px) {
+  .md-typeset .reader-table-picker table:not([class]),
+  .md-typeset .reader-table-picker tbody,
+  .md-typeset .reader-table-picker tr {
+    display: block; inline-size: 100%; box-sizing: border-box;
+  }
+  .md-typeset .reader-table-picker thead {
+    position: absolute; inline-size: 1px; block-size: 1px;
+    overflow: hidden; clip-path: inset(50%);
+  }
+  .md-typeset .reader-table-picker tr {
+    border-bottom: 1px solid var(--md-typeset-table-color); padding: .35em 0;
+  }
+  .md-typeset .reader-table-picker table:not([class]) td {
+    display: block; min-inline-size: 0; border: 0; padding: .35em .5em;
+  }
+  .md-typeset .reader-table-picker td:first-child { font-weight: 600; }
+}
+
+/* README references keep their real fields; no invented rating or limits column. */
+.md-typeset .reader-reference-table { max-inline-size: 100%; overflow-x: auto; }
+.md-typeset .reader-reference-table .md-typeset__scrollwrap { margin: 0; }
+.md-typeset .reader-reference-table .md-typeset__table { display: block; padding: 0; }
+.md-typeset .reader-reference-table table:not([class]) { width: 100%; min-width: 0; }
+.md-typeset .reader-reference-table td { text-align: left; }
+.md-typeset .reader-reference-table th[scope="rowgroup"] { text-align: center; vertical-align: middle; }
+@media (max-width: 900px) {
+  .md-typeset .reader-reference-table table:not([class]),
+  .md-typeset .reader-reference-table tbody,
+  .md-typeset .reader-reference-table tr,
+  .md-typeset .reader-reference-table th[scope="rowgroup"],
+  .md-typeset .reader-reference-table td {
+    box-sizing: border-box; display: block; inline-size: 100%; min-inline-size: 0;
+  }
+  .md-typeset .reader-reference-table thead {
+    position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%);
+  }
+  .md-typeset .reader-reference-table tr { border-bottom: 1px solid var(--md-typeset-table-color); padding: .4em 0; }
+  .md-typeset .reader-reference-table td { border: 0; padding: .2em .65em; }
+  .md-typeset .reader-reference-table td:first-of-type { font-weight: 600; }
+  .md-typeset .reader-reference-table th[scope="rowgroup"] { background: var(--md-code-bg-color); text-align: left; }
+}
+
+/* Give desktop resource comparisons room without widening unrelated pages. */
+@media (min-width: 1200px) {
+  .md-main__inner.md-grid:has(.reader-resource-catalog, .reader-route-table) { max-width: 76rem; }
+}
+
+/* Route names need room; stack the same questions and outcomes on smaller screens. */
+.md-typeset .reader-route-table { max-inline-size: 100%; overflow-x: auto; }
+.md-typeset .reader-route-table .md-typeset__scrollwrap { margin: 0; }
+.md-typeset .reader-route-table .md-typeset__table { display: block; padding: 0; }
+.md-typeset .reader-route-table table:not([class]) { width: 100%; min-width: 0; }
+.md-typeset .reader-route-table table:not([class]) th,
+.md-typeset .reader-route-table table:not([class]) td {
+  text-align: left; word-break: normal; overflow-wrap: break-word;
+}
+@media (max-width: 900px) {
+  .md-typeset .reader-route-table table:not([class]),
+  .md-typeset .reader-route-table tbody,
+  .md-typeset .reader-route-table tr,
+  .md-typeset .reader-route-table td {
+    display: block; inline-size: 100%; min-inline-size: 0; box-sizing: border-box;
+  }
+  .md-typeset .reader-route-table thead {
+    position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%);
+  }
+  .md-typeset .reader-route-table tr { border-bottom: 1px solid var(--md-typeset-table-color); padding: .4em 0; }
+  .md-typeset .reader-route-table table:not([class]) td { border: 0; padding: .25em .65em; }
+  .md-typeset .reader-route-table td:first-child { font-weight: 600; }
+}
+
+/* Institutional document titles can need more room than short repository names. */
+@media (min-width: 901px) {
+  .md-typeset .reader-resource-catalog table:has(thead th:nth-child(2)[width="300"]) thead th:nth-child(2) { width: 30%; }
+  .md-typeset .reader-resource-catalog table:has(thead th:nth-child(2)[width="300"]) thead th:nth-child(4),
+  .md-typeset .reader-resource-catalog table:has(thead th:nth-child(2)[width="300"]) thead th:nth-child(5) { width: 23%; }
+}
+
+@media (min-width: 901px) {
+  .md-typeset .reader-route-table table:not([class]) th[width="260"] { width: 300px; min-width: 300px; }
+}

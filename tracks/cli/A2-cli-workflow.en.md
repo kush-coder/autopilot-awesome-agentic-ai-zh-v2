@@ -1,0 +1,218 @@
+# A2 — Make CLI agents follow the same method every time
+
+> [繁體中文](./A2-cli-workflow.md) | [简体中文](./A2-cli-workflow.zh-Hans.md) | **English**
+
+> [← A1 — Safely complete your first CLI task](A1-cli-intro.en.md) · **Track A: CLI Power User** Stop 2 · [Next: Stage 5 Track A core](../../stages/05-claude-code-ecosystem.en.md#-entry-requirements-and-reading-paths)
+
+This stop answers one question: **How do you make a CLI agent remember the same way of working when it enters the same repo next time?**
+
+You will put rules that must always be known into **Project instructions**, turn frequently repeated steps into a **Skill**, and leave temporary tasks in a **One-off prompt**. It is like changing “explain everything again every day” into “the rules are on the wall, and the toolbox has an instruction card.”
+
+## 🧩 Three Core Terms First
+
+<div align="center" markdown="1">
+
+| Core term | What it is, in plain language | How A2 uses it | What it is not |
+|:---|:---|:---|:---|
+| **Project instructions (project rules)** | Rules you read every time you enter the workshop | Put the project purpose, forbidden actions, test commands, and delivery format here | Not one-off tasks or long reference material |
+| **Skill (reusable instruction card)** | An instruction card you take out when needed | Put repeated review, release, and document-cleanup processes here | Not a universal path, permission set, or frontmatter format |
+| **One-off prompt (single-task prompt)** | Instructions needed only today | Put this task’s scope, inputs, and success conditions here | Not a place to repeat project rules used every time |
+
+</div>
+
+## 📌 Learning Goals
+
+- Use four fields to write short, clear project instructions.
+- Turn a repeated review process into a read-only Skill.
+- Tell apart what can be shared from filenames, permissions, and commands that must be adjusted for each tool.
+
+<details markdown="1">
+<summary>Expand time, prerequisites, environment, and cost</summary>
+
+- **Time**: Complete CLI-5 and CLI-6 first; CLI-7 and CLI-8 can wait, so you do not need to finish everything at once.
+- **Prerequisites**: Complete [A1](A1-cli-intro.en.md), know how to use `git status` and `git diff`, and have a secret-free, recoverable demo repo.
+- **Environment**: Choose one primary CLI agent. Claude Code, Codex, Gemini CLI, and OpenCode do not use exactly the same filenames; the comparison below shows the differences.
+- **Cost**: Writing project-instructions files and Skills does not incur model charges; asking a CLI to test them may use quota or API tokens. Check the official usage/pricing page for the current date.
+
+If you have not completed A1, go back and run “read-only inspection → view the plan → make a small change → `git diff` → restore” once.
+</details>
+
+## 📚 Required Reading
+
+1. First read the official project-instructions documentation for your primary tool: Codex uses [`AGENTS.md`](https://learn.chatgpt.com/docs/agent-configuration/agents-md), Claude Code uses [`CLAUDE.md`](https://code.claude.com/docs/en/memory), Gemini CLI uses [`GEMINI.md`](https://geminicli.com/docs/cli/gemini-md/), and OpenCode uses [`AGENTS.md`](https://opencode.ai/docs/rules).
+2. Then read your tool’s Skill documentation: [Codex/ChatGPT](https://learn.chatgpt.com/docs/build-skills), [Claude Code](https://code.claude.com/docs/en/skills), [Gemini CLI](https://geminicli.com/docs/cli/using-agent-skills/), and [OpenCode](https://opencode.ai/docs/skills/).
+3. Finally, revisit [Stage 2 — Prompt Engineering](../../stages/02-prompt-engineering.en.md) and add the “task, scope, and success conditions” to your one-off prompt.
+<details markdown="1">
+<summary>Expand the project-instructions and Skill locations for four CLIs</summary>
+
+Official information checked on: **2026-08-30 UTC**.
+
+<table align="center">
+<thead>
+<tr><th scope="col">Tool</th><th scope="col">Project instructions</th><th scope="col">Project Skill</th><th scope="col">What to note</th></tr>
+</thead>
+<tbody>
+<tr><th scope="row">Codex</th><td><code>AGENTS.md</code></td><td><code>.agents/skills/&lt;name&gt;/SKILL.md</code></td><td>Rules are layered by directory; the closer rule loads later</td></tr>
+<tr><th scope="row">Claude Code</th><td><code>CLAUDE.md</code></td><td><code>.claude/skills/&lt;name&gt;/SKILL.md</code></td><td>Old <code>.claude/commands/</code> remains compatible, but new workflows should prefer Skills</td></tr>
+<tr><th scope="row">Gemini CLI</th><td><code>GEMINI.md</code></td><td><code>.agents/skills/&lt;name&gt;/SKILL.md</code> or <code>.gemini/skills/…</code></td><td>Skill activation asks for consent; do not put secrets in a Skill</td></tr>
+<tr><th scope="row">OpenCode</th><td><code>AGENTS.md</code> has priority; without it, use <code>CLAUDE.md</code></td><td><code>.opencode/skills/…</code>, <code>.agents/skills/…</code>, or <code>.claude/skills/…</code></td><td>Check rules, skills, and permission settings first</td></tr>
+</tbody>
+</table>
+
+The common part is what you need to explain; filenames, search locations, permissions, and extra settings differ. Do not treat one tool’s special feature as something every CLI has.
+</details>
+
+## 🛠 Hands-on Exercises
+
+<a id="cli-5"></a>
+### Hands-on exercise CLI-5: Make a minimal project-rules card
+
+**Outcome:** Every time the CLI agent enters the repo, it knows what the project does, what it must not touch, how to verify changes, and what to report when finished.
+
+Expand “the project-instructions and Skill locations for four CLIs” above. Find your tool, then put these four things in its instructions file:
+
+```markdown
+# Project rules
+
+- Purpose: This is a practice documentation repo.
+- Do not: Do not delete files, read secrets, or auto-commit or push.
+- Verification: Run `git diff --check` after changes.
+- Report: Explain what changed, the verification results, and what remains unhandled.
+```
+
+This card should contain only what must be known every time. Do not pack long tutorials, API references, or processes you use only occasionally into it.
+
+<details markdown="1">
+<summary>Expand CLI-5 creation and verification steps</summary>
+
+1. Create your primary tool’s project-instructions file in a clean demo repo. Run `git status --short` first so you do not overwrite someone else’s unfinished changes.
+2. Replace the four fields above with real content for this demo repo. Commands must be copyable; do not write vague instructions such as “fix the formatting” when success cannot be checked.
+3. Open a new CLI session and ask it to read only the rules and restate them in its own words. If it cannot find the file, check the official filename and loading scope first.
+4. Give it a test that touches a forbidden action, such as “commit this change directly.” The correct result is for the agent to stop or ask first, not commit by itself.
+5. Run `git status --short -- <rules-file-path>` first to see whether the rules file is old or new.
+   - Existing file: inspect it with `git diff -- <rules-file-path>`. Use `git restore -- <rules-file-path>` only if that exact file was clean before the exercise.
+   - New file: Git shows `??`; `git restore` cannot remove it. You may keep it as the exercise result. To discard it, verify the full path, delete only that file with your file manager, and run `git status --short -- <rules-file-path>` again.
+
+No line count can guarantee that rules are good. Keep only content that changes behavior; move a section used only for a specific task into a Skill or another on-demand document.
+</details>
+
+<a id="cli-6"></a>
+### Hands-on exercise CLI-6: Turn a repeated review into a Skill
+
+**Outcome:** You can ask the agent to run the same read-only review and output `PASS` or concrete problems without committing, pushing, or deploying by itself.
+
+Claude Code uses `.claude/skills/review-changes/SKILL.md`; Codex, Gemini CLI, and OpenCode can use `.agents/skills/review-changes/SKILL.md`. After creating the file, put in:
+
+```markdown
+---
+name: review-changes
+description: Review the current git diff and report concrete risks. Use when the user asks to review local changes.
+---
+
+1. Read `git diff --no-ext-diff HEAD` without changing files.
+2. Check for secrets, unsafe commands, broken links, and missing verification.
+3. Report `PASS` when no problem is found; otherwise list each problem with its file and reason.
+4. Do not edit, commit, push, deploy, or send messages.
+```
+
+`name` is the instruction-card name; `description` tells the agent when to take the card. The body is the set of steps to follow.
+
+<details markdown="1">
+<summary>Expand CLI-6 testing, permissions, and compatibility notes</summary>
+
+1. Read `SKILL.md` all the way through first, confirming that it does not download unfamiliar programs, read secrets, or change external systems.
+2. Make a small documentation change in the demo repo, but do not commit it. Ask the agent to “review my local changes” and observe whether it finds the Skill; you can also enable it manually according to the tool’s documentation.
+3. Compare the report with `git diff`. Run `git status --short` after testing to confirm that the Skill did not quietly change files.
+4. To share one Skill across multiple CLIs, share the core content above first, then adjust the folders, permissions, and tool-specific frontmatter for each tool. Unknown fields may be ignored; do not assume every setting is valid everywhere.
+
+Claude Code’s `.claude/commands/<name>.md` can still create a same-named `/name`, but Skills already include custom commands and support attached files and on-demand loading. This tutorial uses Skills; understand legacy commands only when maintaining an older project.
+</details>
+
+<a id="cli-7"></a>
+### Hands-on exercise CLI-7: Break a large task into visible small steps
+
+**Outcome:** You can split a recoverable documentation task into “inventory → plan → modify → verify,” with a visible result at each step.
+
+<details markdown="1">
+<summary>Expand CLI-7 comparison exercise and multi-agent extension</summary>
+
+Choose a small task, such as “add the same run command to two README files.” The first time, ask the agent for a plan without changing files; the second time, ask it to inventory the two files, list the differences, make the change, run `git diff --check`, and report what remains unhandled.
+
+When comparing the two results, ask only: Were any files missed? Can the changes be recovered? Did verification actually run? Do not assign every small step to a different agent just to make the process look impressive. If tasks must wait for one another, touch the same batch of files, or have unclear success conditions, start with a single agent.
+
+The complete subagent, agent team, background-work, and review processes are in [Stage 5.5](../../stages/05-claude-code-ecosystem.en.md#55--subagents-claude-codes-native-multi-agent-mechanism--2025-new-feature). A2 only practices making the work clear.
+</details>
+
+<a id="cli-8"></a>
+### Hands-on exercise CLI-8: Make a portable prompt comparison card
+
+**Outcome:** You can keep the same task core while clearly marking which filenames, permissions, commands, and activation methods must change when you switch tools.
+
+<details markdown="1">
+<summary>Expand CLI-8 cross-tool testing steps</summary>
+
+1. Put only four fields in the shared core: task, scope, forbidden actions, and success conditions.
+2. Run it once in a clean demo repo with the first CLI, recording the CLI version, model/provider, permission settings, and `git diff`.
+3. Restore the changes, then switch to the second CLI. Do not let two file-writing sessions operate on the same directory at the same time.
+4. Also record the differences: project-instructions filename, Skill location, shell/sandbox permissions, tool names, login, and cost.
+
+“Portable” means the core meaning is easy to carry over; it does not mean the whole text and settings can be copied without changes. If the second tool has no same-named feature, return to the success conditions and choose a method it actually supports.
+</details>
+
+## 🎯 Curated Projects
+
+The resources below are divided into five groups by purpose. Each group shows its category only once so repeated text does not stretch the table.
+
+<div class="reader-resource-catalog" role="region" tabindex="0" aria-label="CLI tools and learning resources">
+<table align="center">
+<thead><tr><th scope="col">Group</th><th scope="col">Project / document</th><th scope="col">Rating</th><th scope="col">Use</th><th scope="col">Sources</th></tr></thead>
+<tbody>
+<tr><th scope="rowgroup" rowspan="4" align="center" valign="middle" width="80">Official project rules</th><td><div data-field="entry"><strong>Codex <code>AGENTS.md</code></strong></div></td><td align="center" valign="middle"><span data-field="rating">⭐⭐⭐⭐⭐</span></td><td><div data-field="read"><strong>Read:</strong> Layered loading and precedence</div><div data-field="when"><strong>Use for:</strong> Writing repo rules for Codex</div></td><td><div data-field="sources"><strong>Source:</strong> <a href="https://learn.chatgpt.com/docs/agent-configuration/agents-md">Official docs</a></div></td></tr>
+<tr><td><div data-field="entry"><strong>Claude Code <code>CLAUDE.md</code></strong></div></td><td align="center" valign="middle"><span data-field="rating">⭐⭐⭐⭐⭐</span></td><td><div data-field="read"><strong>Read:</strong> When to put something in rules and when to move it to a Skill</div><div data-field="when"><strong>Use for:</strong> Writing persistent rules for Claude Code</div></td><td><div data-field="sources"><strong>Source:</strong> <a href="https://code.claude.com/docs/en/memory">Official docs</a></div></td></tr>
+<tr><td><div data-field="entry"><strong>Gemini CLI <code>GEMINI.md</code></strong></div></td><td align="center" valign="middle"><span data-field="rating">⭐⭐⭐⭐⭐</span></td><td><div data-field="read"><strong>Read:</strong> Directory scope and loading method</div><div data-field="when"><strong>Use for:</strong> Adding project context for Gemini CLI</div></td><td><div data-field="sources"><strong>Source:</strong> <a href="https://geminicli.com/docs/cli/gemini-md/">Official docs</a></div></td></tr>
+<tr><td><div data-field="entry"><strong>OpenCode <code>AGENTS.md</code></strong></div></td><td align="center" valign="middle"><span data-field="rating">⭐⭐⭐⭐⭐</span></td><td><div data-field="read"><strong>Read:</strong> Rules loading, merging, and fallback</div><div data-field="when"><strong>Use for:</strong> Writing rules for OpenCode</div></td><td><div data-field="sources"><strong>Source:</strong> <a href="https://opencode.ai/docs/rules">Official docs</a></div></td></tr>
+</tbody>
+<tbody>
+<tr><th scope="rowgroup" rowspan="4" align="center" valign="middle" width="80">Official Skill docs</th><td><div data-field="entry"><strong>Codex/ChatGPT Build skills</strong></div></td><td align="center" valign="middle"><span data-field="rating">⭐⭐⭐⭐⭐</span></td><td><div data-field="read"><strong>Read:</strong> <code>SKILL.md</code> structure and loading location</div><div data-field="when"><strong>Use for:</strong> Making a reusable Codex process</div></td><td><div data-field="sources"><strong>Source:</strong> <a href="https://learn.chatgpt.com/docs/build-skills">Official docs</a></div></td></tr>
+<tr><td><div data-field="entry"><strong>Claude Code Skills</strong></div></td><td align="center" valign="middle"><span data-field="rating">⭐⭐⭐⭐⭐</span></td><td><div data-field="read"><strong>Read:</strong> On-demand loading, legacy commands, and permissions</div><div data-field="when"><strong>Use for:</strong> Making a Claude Code Skill</div></td><td><div data-field="sources"><strong>Source:</strong> <a href="https://code.claude.com/docs/en/skills">Official docs</a></div></td></tr>
+<tr><td><div data-field="entry"><strong>Gemini CLI Agent Skills</strong></div></td><td align="center" valign="middle"><span data-field="rating">⭐⭐⭐⭐⭐</span></td><td><div data-field="read"><strong>Read:</strong> Discovery, installation consent, and activation consent</div><div data-field="when"><strong>Use for:</strong> Managing Gemini CLI Skills</div></td><td><div data-field="sources"><strong>Source:</strong> <a href="https://geminicli.com/docs/cli/using-agent-skills/">Official docs</a></div></td></tr>
+<tr><td><div data-field="entry"><strong>OpenCode Agent Skills</strong></div></td><td align="center" valign="middle"><span data-field="rating">⭐⭐⭐⭐⭐</span></td><td><div data-field="read"><strong>Read:</strong> Supported locations, frontmatter, and permission</div><div data-field="when"><strong>Use for:</strong> Making an OpenCode Skill</div></td><td><div data-field="sources"><strong>Source:</strong> <a href="https://opencode.ai/docs/skills/">Official docs</a></div></td></tr>
+</tbody>
+<tbody>
+<tr><th scope="rowgroup" rowspan="4" align="center" valign="middle" width="80">Standards and readable examples</th><td><div data-field="entry"><strong>Agent Skills specification</strong></div></td><td align="center" valign="middle"><span data-field="rating">⭐⭐⭐⭐</span></td><td><div data-field="read"><strong>Read:</strong> Minimum requirements for a shared format</div><div data-field="when"><strong>Use for:</strong> Making the core content easier to carry across tools</div></td><td><div data-field="sources"><strong>Source:</strong> <a href="https://agentskills.io/specification">Standard</a></div></td></tr>
+<tr><td><div data-field="entry"><strong><code>claude-plugins-official</code></strong></div></td><td align="center" valign="middle"><span data-field="rating">⭐⭐⭐⭐⭐</span></td><td><div data-field="read"><strong>Read:</strong> Skills and commands inside official plugins</div><div data-field="when"><strong>Use for:</strong> Seeing how a Skill is packaged for sharing</div></td><td><div data-field="sources"><strong>Source:</strong> <a href="https://github.com/anthropics/claude-plugins-official">GitHub repo</a></div></td></tr>
+<tr><td><div data-field="entry"><strong><code>skills</code></strong></div></td><td align="center" valign="middle"><span data-field="rating">⭐⭐⭐⭐</span></td><td><div data-field="read"><strong>Read:</strong> Short Skill examples used in engineering work</div><div data-field="when"><strong>Use for:</strong> Comparing different writing styles</div></td><td><div data-field="sources"><strong>Source:</strong> <a href="https://github.com/mattpocock/skills">GitHub repo</a></div></td></tr>
+<tr><td><div data-field="entry"><strong><code>superpowers</code></strong></div></td><td align="center" valign="middle"><span data-field="rating">⭐⭐⭐⭐</span></td><td><div data-field="read"><strong>Read:</strong> How real workflows are split into Skills</div><div data-field="when"><strong>Use for:</strong> After completing your first Skill</div></td><td><div data-field="sources"><strong>Source:</strong> <a href="https://github.com/obra/superpowers">GitHub repo</a></div></td></tr>
+</tbody>
+<tbody>
+<tr><th scope="rowgroup" rowspan="2" align="center" valign="middle" width="80">Indexes and prompt practice</th><td><div data-field="entry"><strong><code>awesome-claude-code</code></strong></div></td><td align="center" valign="middle"><span data-field="rating">⭐⭐⭐</span></td><td><div data-field="read"><strong>Read:</strong> Finding Claude Code resources by type</div><div data-field="when"><strong>Use for:</strong> When you know the need and want more examples</div></td><td><div data-field="sources"><strong>Source:</strong> <a href="https://github.com/hesreallyhim/awesome-claude-code">GitHub repo</a></div></td></tr>
+<tr><td><div data-field="entry"><strong><code>prompt-eng-interactive-tutorial</code></strong></div></td><td align="center" valign="middle"><span data-field="rating">⭐⭐⭐⭐</span></td><td><div data-field="read"><strong>Read:</strong> Comparing prompt approaches step by step</div><div data-field="when"><strong>Use for:</strong> When the shared core in CLI-8 is unclear</div></td><td><div data-field="sources"><strong>Source:</strong> <a href="https://github.com/anthropics/prompt-eng-interactive-tutorial">Official GitHub repo</a></div></td></tr>
+</tbody>
+<tbody>
+<tr><th scope="rowgroup" rowspan="2" align="center" valign="middle" width="80">Repo context tools</th><td><div data-field="entry"><strong><code>repomix</code></strong></div></td><td align="center" valign="middle"><span data-field="rating">⭐⭐⭐⭐⭐</span></td><td><div data-field="read"><strong>Read:</strong> Creating a one-off codebase snapshot</div><div data-field="when"><strong>Use for:</strong> When you need to organize repo contents for an agent</div></td><td><div data-field="sources"><strong>Source:</strong> <a href="https://github.com/yamadashy/repomix">GitHub repo</a></div></td></tr>
+<tr><td><div data-field="entry"><strong><code>openwiki</code></strong></div></td><td align="center" valign="middle"><span data-field="rating">⭐⭐⭐⭐</span></td><td><div data-field="read"><strong>Read:</strong> Creating a continuously updated repo wiki</div><div data-field="when"><strong>Use for:</strong> When a large repo needs on-demand document lookup</div></td><td><div data-field="sources"><strong>Source:</strong> <a href="https://github.com/langchain-ai/openwiki">GitHub repo</a></div></td></tr>
+</tbody>
+</table>
+</div>
+<a id="-self-check-before-a3"></a>
+
+## ✅ Self-check before Stage 5
+
+- [ ] I can distinguish project instructions, Skill, and one-off prompt in my own words.
+- [ ] My project-rules card states the purpose, forbidden actions, verification command, and delivery format, and the agent can read it.
+- [ ] My review Skill reads changes only; after testing, `git status --short` shows no unexpected modifications.
+- [ ] I know that a “shared core” does not mean every CLI has the same filenames and permissions.
+
+Once all four are done, go to the [Stage 5 Track A core](../../stages/05-claude-code-ecosystem.en.md#-entry-requirements-and-reading-paths), read 5.1–5.4, then continue to A3. If not, return to the demo repo and repeat CLI-5 or CLI-6; you do not need to read every supplement first.
+
+<details markdown="1">
+<summary>Expand common questions and fixes</summary>
+
+- **The rules are long, but the agent still misses them**: Delete background stories and repeated sentences first, keeping only observable behavior. Safety checks that must run every time should use the tool’s hook/policy instead of relying only on text reminders.
+- **The Skill does not appear**: Check the folder, the capitalization of `SKILL.md`, YAML frontmatter, and the locations supported by the tool, then reload or reopen the session according to the official method.
+- **The Skill performs a dangerous action by itself**: Change deploy, send, commit, and push to actions that users must explicitly enable, and test with a read-only version first. Read all third-party Skill content and scripts before using it.
+- **The same Skill breaks in another CLI**: Keep the shared goal and steps, then compare the frontmatter, permissions, and tool names recognized by that tool; do not guess.
+- **There is too much project information**: Treat project instructions as a map only; put details in `docs/`, the Skill’s `references/`, or another on-demand document. Longer rules are not automatically more reliable.
+</details>
+
+> Safety baseline: Rules and Skills are text instructions, not absolute protection. Do not put API keys, tokens, or personal data in them. Any workflow that writes files, commits, pushes, deploys, or calls an external service needs a visible permission boundary and verification steps.
